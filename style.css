@@ -1,0 +1,73 @@
+/**
+	author: bartek
+	date: 20:45 19-08-2015
+**/
+
+body{
+	height: 329612px;
+}
+
+#chat-min{
+	width: 235px;
+	height: 300px;
+	border-radius: 1px;
+	background-color: #f0f0f0;
+	position: fixed;
+	bottom: 5px;
+	right: 15px;
+}
+
+#chat-header{
+	height: 30px;
+	background-color: #2C3E50;
+}
+
+#chat-content{
+	padding: 5px;
+	height: 223px;
+}
+
+#chat-bottom{
+	height: 35px;
+}
+
+#chat-input{
+	display: block;
+	width: 90%;
+	margin: 0 auto;
+	border: 1px solid #ddd;
+	background-color: #fff;
+	height: 29px;
+	padding: 2px 4px;
+	position: relative;
+	top: 3px;
+	transition: all .15s ease-out;
+}
+
+#chat-switch{
+	display: inline-block;
+	width: 15px;
+	height: 15px;
+	border: 2px solid #ddd;
+	box-shadow: 0 0 5px #000;
+	border-radius: 2px;
+}
+
+nanana#chat-switch:after{
+	position: relative;
+	top: 5px;
+	content: "";
+	display: inline-block;
+	width: 0;
+	height: 0;
+	border: 10px solid transparent;
+	border-top-color: #eee;
+}
+
+#chat-input:focus{
+	border-color: #54B3F7;
+}
+
+#chat-input:focus{
+	outline: 0 !important;
+}
