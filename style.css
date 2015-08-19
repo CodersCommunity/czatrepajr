@@ -4,6 +4,7 @@
 **/
 
 body{
+	/*test*/
 	height: 329612px;
 }
 
@@ -11,20 +12,29 @@ body{
 	width: 235px;
 	height: 300px;
 	border-radius: 1px;
-	background-color: #f0f0f0;
+	background-color: #eaeaea;
 	position: fixed;
 	bottom: 5px;
 	right: 15px;
 }
 
 #chat-header{
+	display: flex;
+	justify-content: space-between;
 	height: 30px;
+	line-height: 30px;
 	background-color: #2C3E50;
+}
+
+#chat-header > b{
+	color: #eee;
+	position: relative;
+	left: 5px;
 }
 
 #chat-content{
 	padding: 5px;
-	height: 223px;
+	height: 220px;
 }
 
 #chat-bottom{
@@ -39,8 +49,6 @@ body{
 	background-color: #fff;
 	height: 29px;
 	padding: 2px 4px;
-	position: relative;
-	top: 3px;
 	transition: all .15s ease-out;
 }
 
@@ -51,6 +59,8 @@ body{
 	border: 2px solid #ddd;
 	box-shadow: 0 0 5px #000;
 	border-radius: 2px;
+	margin-top: 5px;
+	margin-right: 5px;
 }
 
 nanana#chat-switch:after{
@@ -66,8 +76,4 @@ nanana#chat-switch:after{
 
 #chat-input:focus{
 	border-color: #54B3F7;
-}
-
-#chat-input:focus{
-	outline: 0 !important;
 }
