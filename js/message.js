@@ -13,5 +13,5 @@ function Message(data){
 }
 
 Message.prototype.createDOM = function(){
-
+	this.$el = document.createElement('div');
 }
