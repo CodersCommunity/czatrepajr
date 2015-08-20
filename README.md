@@ -20,12 +20,7 @@ Nakładka na chat, mająca na celu umożliwienie korzystania z niego podczas prz
 (function(s, m, c){
     //var PATH = 'http://localhost:81/mz-czatrepajr/';
     var PATH = 'http://efik.syntax-shell.me/czatrepajr/';
-
-    var a = document.head.appendChild(document.createElement('script'));
-        a.src = 'http://efik.syntax-shell.me/czatrepajr/js/chat.js';
-        a.addEventListener('load', function(){
-            console.log('ok');
-        });
+    
 
     //do poprawy
     $('<div id="min-chat"> \
@@ -44,6 +39,7 @@ Nakładka na chat, mająca na celu umożliwienie korzystania z niego podczas prz
     ].forEach(function(e){
         s.setAttribute(e[0], e[1]);
     });
+    
 
     m.setAttribute('src', PATH + 'js/message.js');
     m.addEventListener('load', function(){
