@@ -22,7 +22,7 @@ Message.prototype.createDOM = function(){
 
 
 	var $a = this.$el.appendChild(document.createElement('a'));
-		$a.setAttribute('href', 'http://forum.miroslawzelent.pl/user/' + this.user.name.split(' ').join('+')); //escape() is strange O_o
+		$a.setAttribute('href', 'http://forum.miroslawzelent.pl/user/'+this.user.name.split(' ').join('+')); //escape() is strange O_o
 		$a.innerText = this.user.name;
 
 

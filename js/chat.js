@@ -20,7 +20,7 @@ function ChatCreator(){
 	this.commands = new Set([
 		'/online'
 		,'/clear'
-		,'/lastmsg' //dev
+		,'/lastid' //dev
 	]);
 }
 
@@ -31,18 +31,37 @@ ChatCreator.prototype.bindDOM = function(e){
 	}.bind(this));
 }
 
+ChatCreator.prototype.systemMessage = function(val){
+	this.updateMessages([{
+		postid: 0 - Math.round(Math.random()*1000),
+		userid: -1,
+		username: 'System',
+		posted: new Date().toISOString().substr(0, 19).split('T').join(' '),
+		message: val
+	}]);
+}
+
 ChatCreator.prototype.commandParse = function(val){
 	if(!this.commands.has(val))return false;
 
 	switch(val){
 		case '/online':
-			///
+			(function(){
+				var a = '';
+				for(var i of this.users.values()){
+					a += (a===''?'':', ') + (i.idle?'[i] ':'') + i.name;
+				}
+
+				this.systemMessage('online: ' + a);
+			}).apply(this);
 			break;
+
 		case '/clear':
 			this.$box.innerHTML = '';
 			break;
-		case '/lastmsg':
-			//
+
+		case '/lastid':
+			this.systemMessage('lastID: ' + this.lastID);
 			break;
 	}
 
@@ -55,7 +74,7 @@ ChatCreator.prototype.updateMessages = function(m){
 		if(this.messages.has(Number(i.postid)))return;
 
 		this.messages.add(Number(i.postid));
-		
+
 		if(Number(i.postid) > this.lastID)this.lastID = Number(i.postid);
 
 		this.$box.appendChild(new Message(i).getDOM());
@@ -82,7 +101,7 @@ ChatCreator.prototype.sendMessage = function(val){
 
 	document.getElementById('chat-input').value = '';
 
-	if(this.commandParse(val))return;
+	if(this.commandParse.bind(this)(val))return;
 
 	$.post(this.url, {
 		ajax_add_message: val
