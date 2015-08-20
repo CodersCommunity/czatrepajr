@@ -21,12 +21,12 @@ Message.prototype.createDOM = function(){
 	this.$el.classList.add('min-message');
 
 
-	var $a = this.$el.createElement('a');
-		$a.setAttribute('href', this.user.name.split(' ').join('+')); //escape() is strange O_o
+	var $a = this.$el.appendChild(document.createElement('a'));
+		$a.setAttribute('href', 'http://forum.miroslawzelent.pl/user/'+this.user.name.split(' ').join('+')); //escape() is strange O_o
 		$a.innerText = this.user.name;
 
 
-	var $c = this.$el.createElement('span');
+	var $c = this.$el.appendChild(document.createElement('span'));
 		$c.innerHTML = this.value;  //value is already escaped from html tags
 }
 

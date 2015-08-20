@@ -14,13 +14,13 @@ function ChatCreator(){
 
 	this.userID = null;
 	this.lastID = 0;
-	this.messages = new Map();
 	this.users = new Map();
+	this.messages = new Set();
 
 	this.commands = new Set([
 		'/online'
 		,'/clear'
-		,'/lastmsg' //dev
+		,'/lastid' //dev
 	]);
 }
 
@@ -31,18 +31,37 @@ ChatCreator.prototype.bindDOM = function(e){
 	}.bind(this));
 }
 
+ChatCreator.prototype.systemMessage = function(val){
+	this.updateMessages([{
+		postid: 0 - Math.round(Math.random()*1000),
+		userid: -1,
+		username: 'System',
+		posted: new Date().toISOString().substr(0, 19).split('T').join(' '),
+		message: val
+	}]);
+}
+
 ChatCreator.prototype.commandParse = function(val){
 	if(!this.commands.has(val))return false;
 
 	switch(val){
 		case '/online':
-			///
+			(function(){
+				var a = '';
+				for(var i of this.users.values()){
+					a += (a===''?'':', ') + (i.idle?'[i] ':'') + i.name;
+				}
+
+				this.systemMessage('online: ' + a);
+			}).apply(this);
 			break;
+
 		case '/clear':
 			this.$box.innerHTML = '';
 			break;
-		case '/lastmsg':
-			//
+
+		case '/lastid':
+			this.systemMessage('lastID: ' + this.lastID);
 			break;
 	}
 
@@ -50,39 +69,39 @@ ChatCreator.prototype.commandParse = function(val){
 }
 
 ChatCreator.prototype.updateMessages = function(m){
+	m = m.reverse();
 	m.forEach(function(i){
 		if(this.messages.has(Number(i.postid)))return;
 
-		this.messages.set(Number(i.postid), {
-			user: {
-				id: i.userid
-				,name: i.username
-			}
-			,value: i.message
-			,posted: i.posted
-		});
+		this.messages.add(Number(i.postid));
+
+		if(Number(i.postid) > this.lastID)this.lastID = Number(i.postid);
 
 		this.$box.appendChild(new Message(i).getDOM());
+		this.$box.scrollTop = 99999999999;
 		//notify?
-	});
+	}.bind(this));
 }
 
 ChatCreator.prototype.updateUsers = function(u){
 	this.users.clear();
 
 	u.forEach(function(o){
-		this.users.add(Number(o.userid), {
+		this.users.set(Number(o.userid), {
 			name: o.username
 			,idle: (o.idle==="1")
 			,level: Number(o.level)
 			,kicked: Number(o.kicked) //or bool maybe?
 			,kickable: Number(o.kickable) //the same? xD
 		});
-	});
+	}.bind(this));
 }
 
 ChatCreator.prototype.sendMessage = function(val){
-	if(this.commandParse(val))return;
+
+	document.getElementById('chat-input').value = '';
+
+	if(this.commandParse.bind(this)(val))return;
 
 	$.post(this.url, {
 		ajax_add_message: val
@@ -98,8 +117,8 @@ ChatCreator.prototype.sendMessage = function(val){
 		if(!this.userID)
 			this.userID = Number(res[1]);
 
-		this.updateMessages(JSON.parse(res[2]));
-	}).fail(function(){
+		this.updateMessages([JSON.parse(res[2])]);
+	}.bind(this)).fail(function(){
 		console.warn('sendMessage fail');
 	});
 }
@@ -120,16 +139,17 @@ ChatCreator.prototype.getMessages = function(){
 		if(!this.userID)
 			this.userID = Number(res[1]);
 
-		this.updateMessages(JSON.parse(res[2]));	//lastid
+		this.updateMessages(JSON.parse(res[2]));
 		this.updateUsers(JSON.parse(res[3]));
-	}).fail(function(){
+	}.bind(this)).fail(function(){
 		console.warn('getMessages fail');
 	});
 
-	setTimeout(this.getMessages.bind(this), 300);
+	setTimeout(this.getMessages.bind(this), 1500);
 }
 
 document.addEventListener('DOMContentLoaded', function(){
 	window.chat = new ChatCreator();
 	chat.bindDOM();
+	chat.getMessages();
 });
