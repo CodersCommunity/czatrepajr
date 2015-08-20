@@ -99,7 +99,9 @@ ChatCreator.prototype.updateUsers = function(u){
 
 ChatCreator.prototype.sendMessage = function(val){
 
-	document.getElementById('chat-input').value = '';
+	var chatInput = document.getElementById('chat-input');
+	chatInput.value = '';
+	chatInput.setAttribute('disabled', 'disabled');
 
 	if(this.commandParse.bind(this)(val))return;
 
@@ -118,8 +120,10 @@ ChatCreator.prototype.sendMessage = function(val){
 			this.userID = Number(res[1]);
 
 		this.updateMessages([JSON.parse(res[2])]);
+		chatInput.removeAttribute('disabled');
 	}.bind(this)).fail(function(){
 		console.warn('sendMessage fail');
+		chatInput.removeAttribute('disabled');
 	});
 };
 
