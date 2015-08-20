@@ -10,6 +10,7 @@ function ChatCreator(){
 	this.notifyTimeout = null;
 	this.defaultTitle = document.title;
 	this.toSeen = false;
+	this.url = 'http://forum.miroslawzelent.pl/chat';
 
 	this.userID = null;
 	this.lastID = 0;
@@ -48,10 +49,42 @@ ChatCreator.prototype.commandParse = function(val){
 	return true;
 }
 
+ChatCreator.updateMessages = function(m){
+	m.forEach(function(i){
+		if(this.messages.has(Number(i.postid)))return;
+
+		this.messages.set(Number(i.postid), {
+			user: {
+				id: i.userid
+				,name: i.username
+			}
+			,value: i.message
+			,posted: i.posted
+		});
+
+		this.$box.appendChild(new Message(i).getDOM());
+		//notify?
+	});
+}
+
+ChatCreator.updateUsers = function(u){
+	this.users.clear();
+
+	u.forEach(function(o){
+		this.users.add(Number(o.userid), {
+			name: o.username
+			,idle: (o.idle==="1")
+			,level: Number(o.level)
+			,kicked: Number(o.kicked) //or bool maybe?
+			,kickable: Number(o.kickable) //the same? xD
+		});
+	});
+}
+
 ChatCreator.prototype.sendMessage = function(val){
 	if(this.commandParse(val))return;
 
-	$.post('./chat', {
+	$.post(this.url, {
 		ajax_add_message: val
 		,ajax_add_lastid: this.lastID
 	}).done(function(res){
@@ -74,7 +107,7 @@ ChatCreator.prototype.sendMessage = function(val){
 ChatCreator.prototype.getMessages = function(){
 	if(this.stop)return;
 
-	$.post('./chat', {
+	$.post(this.url, {
 		ajax_get_messages: this.lastID
 	}).done(function(res){
 		if(res.contains("Nie jesteś już zalogowany.")){

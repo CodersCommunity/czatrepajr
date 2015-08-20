@@ -10,6 +10,8 @@ function Message(data){
 	this.posted = data.posted
 
 	this.$el = null; //after createDOM() -> div.message
+
+	this.createDOM();
 }
 
 Message.prototype.createDOM = function(){
