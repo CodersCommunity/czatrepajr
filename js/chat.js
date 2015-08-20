@@ -26,10 +26,10 @@ function ChatCreator(){
 
 ChatCreator.prototype.bindDOM = function(e){
 	document.getElementById('chat-input').addEventListener('keyup', function(e){
-		if(e.which != 13 || document.getElementById('chat-input').value.trim().length < 2)return;
+		if(e.which != 13 || document.getElementById('chat-input').value.trim().length < 2 || e.shiftKey)return;
 		this.sendMessage(document.getElementById('chat-input').value.trim());
 	}.bind(this));
-}
+};
 
 ChatCreator.prototype.systemMessage = function(val){
 	this.updateMessages([{
@@ -39,7 +39,7 @@ ChatCreator.prototype.systemMessage = function(val){
 		posted: new Date().toISOString().substr(0, 19).split('T').join(' '),
 		message: val
 	}]);
-}
+};
 
 ChatCreator.prototype.commandParse = function(val){
 	if(!this.commands.has(val))return false;
@@ -66,7 +66,7 @@ ChatCreator.prototype.commandParse = function(val){
 	}
 
 	return true;
-}
+};
 
 ChatCreator.prototype.updateMessages = function(m){
 	m = m.reverse();
@@ -81,7 +81,7 @@ ChatCreator.prototype.updateMessages = function(m){
 		this.$box.scrollTop = 99999999999;
 		//notify?
 	}.bind(this));
-}
+};
 
 ChatCreator.prototype.updateUsers = function(u){
 	this.users.clear();
@@ -95,7 +95,7 @@ ChatCreator.prototype.updateUsers = function(u){
 			,kickable: Number(o.kickable) //the same? xD
 		});
 	}.bind(this));
-}
+};
 
 ChatCreator.prototype.sendMessage = function(val){
 
@@ -121,7 +121,7 @@ ChatCreator.prototype.sendMessage = function(val){
 	}.bind(this)).fail(function(){
 		console.warn('sendMessage fail');
 	});
-}
+};
 
 ChatCreator.prototype.getMessages = function(){
 	if(this.stop)return;
@@ -146,7 +146,7 @@ ChatCreator.prototype.getMessages = function(){
 	});
 
 	setTimeout(this.getMessages.bind(this), 1500);
-}
+};
 
 document.addEventListener('DOMContentLoaded', function(){
 	window.chat = new ChatCreator();
