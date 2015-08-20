@@ -3,12 +3,7 @@
 	date: 20:45 19-08-2015
 **/
 
-body{
-	background-image: url("http://forum.miroslawzelent.pl/tlo.png");
-	height: 329612px;
-}
-
-#chat-min{
+div#min-chat{
 	width: 235px;
 	height: 300px;
 	border-radius: 1px;
@@ -20,7 +15,7 @@ body{
 	box-shadow: 0 0 15px #888;
 }
 
-#chat-header{
+div#min-chat > header{
 	display: flex;
 	justify-content: space-between;
 	height: 30px;
@@ -28,20 +23,25 @@ body{
 	background-color: #2C3E50;
 }
 
-#chat-header > b{
+div#min-chat > header > b{
 	color: #eee;
 	position: relative;
 	left: 5px;
 }
 
-#chat-content{
+div#min-chat > main{
 	padding: 0 10px;
-	height: 210px;
+	height: 225px;
 	margin: 5px 0;
 	overflow-y: auto;
 }
 
-#chat-bottom{
+div#min-chat main > div{
+	font-size: 13px;
+	word-break: break-all;
+}
+
+div#min-chat footer{
 	height: 35px;
 }
 
@@ -58,4 +58,8 @@ body{
 
 #chat-input:focus{
 	border-color: #54B3F7;
+}
+
+#chat-input:hover{
+	border-color: #aaa;
 }
