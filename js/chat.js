@@ -49,7 +49,7 @@ ChatCreator.prototype.commandParse = function(val){
 	return true;
 }
 
-ChatCreator.updateMessages = function(m){
+ChatCreator.prototype.updateMessages = function(m){
 	m.forEach(function(i){
 		if(this.messages.has(Number(i.postid)))return;
 
@@ -67,7 +67,7 @@ ChatCreator.updateMessages = function(m){
 	});
 }
 
-ChatCreator.updateUsers = function(u){
+ChatCreator.prototype.updateUsers = function(u){
 	this.users.clear();
 
 	u.forEach(function(o){
