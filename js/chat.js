@@ -15,6 +15,7 @@ function ChatCreator(){
 	this.userID = null;
 	this.lastID = 0;
 	this.users = new Map();
+	this.messages = new Set();
 
 	this.commands = new Set([
 		'/online'
@@ -51,8 +52,11 @@ ChatCreator.prototype.commandParse = function(val){
 ChatCreator.prototype.updateMessages = function(m){
 	m = m.reverse();
 	m.forEach(function(i){
-		if(Number(i.postid) > this.lastID)
-			this.lastID = Number(i.postid);
+		if(this.messages.has(Number(i.postid)))return;
+
+		this.messages.add(Number(i.postid));
+		
+		if(Number(i.postid) > this.lastID)this.lastID = Number(i.postid);
 
 		this.$box.appendChild(new Message(i).getDOM());
 		this.$box.scrollTop = 99999999999;
@@ -75,8 +79,10 @@ ChatCreator.prototype.updateUsers = function(u){
 }
 
 ChatCreator.prototype.sendMessage = function(val){
-	if(this.commandParse(val))return;
+
 	document.getElementById('chat-input').value = '';
+
+	if(this.commandParse(val))return;
 
 	$.post(this.url, {
 		ajax_add_message: val
@@ -120,7 +126,7 @@ ChatCreator.prototype.getMessages = function(){
 		console.warn('getMessages fail');
 	});
 
-	setTimeout(this.getMessages.bind(this), 750);
+	setTimeout(this.getMessages.bind(this), 1500);
 }
 
 document.addEventListener('DOMContentLoaded', function(){
