@@ -4,8 +4,9 @@
 */
 
 function ChatCreator(){
-	this.stop = false;
+	this.$box = document.querySelector('#min-chat > main');
 
+	this.stop = false;
 	this.notifyTimeout = null;
 	this.defaultTitle = document.title;
 	this.toSeen = false;
@@ -14,6 +15,12 @@ function ChatCreator(){
 	this.lastID = 0;
 	this.messages = new Map();
 	this.users = new Map();
+
+	this.commands = new Set([
+		'/online'
+		,'/clear'
+		,'/lastmsg' //dev
+	]);
 }
 
 ChatCreator.prototype.bindDOM = function(e){
@@ -23,10 +30,30 @@ ChatCreator.prototype.bindDOM = function(e){
 	}.bind(this));
 }
 
-ChatCreator.prototype.sendMessage = function(value){
+ChatCreator.prototype.commandParse = function(val){
+	if(!this.commands.has(val))return false;
+
+	switch(val){
+		case '/online':
+			///
+			break;
+		case '/clear':
+			this.$box.innerHTML = '';
+			break;
+		case '/lastmsg':
+			//
+			break;
+	}
+
+	return true;
+}
+
+ChatCreator.prototype.sendMessage = function(val){
+	if(this.commandParse(val))return;
+
 	$.post('./chat', {
-		ajax_add_message: value,
-		ajax_add_lastid: this.lastID
+		ajax_add_message: val
+		,ajax_add_lastid: this.lastID
 	}).done(function(res){
 		if(res.contains("Nie jesteś już zalogowany.")){
 			this.stop = true;
