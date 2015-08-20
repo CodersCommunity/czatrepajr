@@ -101,10 +101,10 @@ ChatCreator.prototype.sendMessage = function(val){
 
 	var chatInput = document.getElementById('chat-input');
 	chatInput.value = '';
-	chatInput.setAttribute('disabled', 'disabled');
 
 	if(this.commandParse.bind(this)(val))return;
 
+	chatInput.setAttribute('disabled', 'disabled');
 	$.post(this.url, {
 		ajax_add_message: val
 		,ajax_add_lastid: this.lastID
