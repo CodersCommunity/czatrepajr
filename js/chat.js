@@ -88,7 +88,7 @@ ChatCreator.prototype.sendMessage = function(val){
 		ajax_add_message: val
 		,ajax_add_lastid: this.lastID
 	}).done(function(res){
-		if(res.contains("Nie jesteś już zalogowany.")){
+		if(res.indexOf("Nie jesteś już zalogowany.") > -1){
 			this.stop = true;
 			return;
 		}
@@ -110,7 +110,7 @@ ChatCreator.prototype.getMessages = function(){
 	$.post(this.url, {
 		ajax_get_messages: this.lastID
 	}).done(function(res){
-		if(res.contains("Nie jesteś już zalogowany.")){
+		if(res.indexOf("Nie jesteś już zalogowany.") > -1){
 			this.stop = true;
 			return;
 		}
