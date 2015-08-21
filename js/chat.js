@@ -3,8 +3,8 @@
 	date: 23:49 19-08-2015
 */
 
-function ChatCreator(){
-	this.$box = document.querySelector('#min-chat > main');
+function Chat() {
+	this.$box = document.querySelector('.min-chat__content');
 
 	this.stop = false;
 	this.notifyTimeout = null;
@@ -17,21 +17,19 @@ function ChatCreator(){
 	this.users = new Map();
 	this.messages = new Set();
 
-	this.commands = new Set([
-		'/online'
-		,'/clear'
-		,'/lastid' //dev
-	]);
+	this.setupCommands();
 }
 
-ChatCreator.prototype.bindDOM = function(e){
+Chat.prototype.bindDOM = function(e) {
 	document.getElementById('chat-input').addEventListener('keyup', function(e){
-		if(e.which != 13 || document.getElementById('chat-input').value.trim().length < 2 || e.shiftKey)return;
+		if(e.which != 13 || document.getElementById('chat-input').value.trim().length < 2 || e.shiftKey)
+			return;
+
 		this.sendMessage(document.getElementById('chat-input').value.trim());
 	}.bind(this));
 };
 
-ChatCreator.prototype.systemMessage = function(val){
+Chat.prototype.systemMessage = function(val) {
 	this.updateMessages([{
 		postid: 0 - Math.round(Math.random()*1000),
 		userid: -1,
@@ -41,34 +39,45 @@ ChatCreator.prototype.systemMessage = function(val){
 	}]);
 };
 
-ChatCreator.prototype.commandParse = function(val){
-	if(!this.commands.has(val))return false;
-
-	switch(val){
-		case '/online':
-			(function(){
+Chat.prototype.setupCommands = function() {
+	this.commands = new Map([
+		[
+			'/online'
+			,function() {
 				var a = '';
-				for(var i of this.users.values()){
+
+				for(var i of this.users.values()) {
 					a += (a===''?'':', ') + (i.idle?'[i] ':'') + i.name;
 				}
 
 				this.systemMessage('online: ' + a);
-			}).apply(this);
-			break;
+			}.bind(this)
+		]
+		,[
+			'/clear'
+			,function() {
+				this.$box.innerHTML = '';
+			}.bind(this)
+		]
+		,[
+			'/lastid'
+			,function() {
+				this.systemMessage('lastID: ' + this.lastID);
+			}.bind(this)
+		]
+	]);
+};
 
-		case '/clear':
-			this.$box.innerHTML = '';
-			break;
+Chat.prototype.commandParse = function(val) {
+	if(!this.commands.has(val))
+		return false;
 
-		case '/lastid':
-			this.systemMessage('lastID: ' + this.lastID);
-			break;
-	}
+	this.commands.get(val)();
 
 	return true;
 };
 
-ChatCreator.prototype.updateMessages = function(m){
+Chat.prototype.updateMessages = function(m){
 	m = m.reverse();
 	m.forEach(function(i){
 		if(this.messages.has(Number(i.postid)))return;
@@ -83,7 +92,7 @@ ChatCreator.prototype.updateMessages = function(m){
 	}.bind(this));
 };
 
-ChatCreator.prototype.updateUsers = function(u){
+Chat.prototype.updateUsers = function(u){
 	this.users.clear();
 
 	u.forEach(function(o){
@@ -97,7 +106,7 @@ ChatCreator.prototype.updateUsers = function(u){
 	}.bind(this));
 };
 
-ChatCreator.prototype.sendMessage = function(val){
+Chat.prototype.sendMessage = function(val){
 
 	var chatInput = document.getElementById('chat-input');
 	chatInput.value = '';
@@ -129,7 +138,7 @@ ChatCreator.prototype.sendMessage = function(val){
 	});
 };
 
-ChatCreator.prototype.getMessages = function(){
+Chat.prototype.getMessages = function(){
 	if(this.stop)return;
 
 	$.post(this.url, {
@@ -154,8 +163,3 @@ ChatCreator.prototype.getMessages = function(){
 	setTimeout(this.getMessages.bind(this), 1500);
 };
 
-document.addEventListener('DOMContentLoaded', function(){
-	window.chat = new ChatCreator();
-	chat.bindDOM();
-	chat.getMessages();
-});

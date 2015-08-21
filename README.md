@@ -19,37 +19,41 @@ Nakładka na chat, mająca na celu umożliwienie korzystania z niego podczas prz
 
 (function(s, m, c){
     //var PATH = 'http://localhost:81/mz-czatrepajr/';
-    var PATH = 'http://chat.syntax-shell.me/';
+    var PATH = 'http://chat.syntax-shell.me/'
+    ,toLoad = 2
+    ,loadHandler = function()
+    {
+        if(!--toLoad)
+            init();
+    }
+    ,init = function()
+    {
+        var chat = new Chat();
+        chat.bindDOM();
+        chat.getMessages();
+    }
     
 
     //do poprawy
-    $('<div id="min-chat"> \
-        <header> \
-            <b>Zminimalizowany chat</b> \
+    $('<section class="min-chat"> \
+        <header class="min-chat__header"> \
+            <b class="min-chat__header__title">Zminimalizowany chat</b> \
         </header> \
-        <main></main> \
-        <footer> \
-            <input type="text" id="chat-input" spellcheck="true"/> \
-        </footer> \
-    </div>').appendTo('body');
-    [
-        ['rel', 'stylesheet'],
-        ['type', 'text/css'],
-        ['href', PATH + 'style/main.css']
-    ].forEach(function(e){
-        s.setAttribute(e[0], e[1]);
-    });
-    
+        <div class="min-chat__content"></div> \
+        <div class="min-chat__fieldset"> \
+            <input type="text" id="chat-input" class="min-chat__fieldset__input" spellcheck="true"> \
+        </div> \
+    </section>').appendTo('body');
 
-    m.setAttribute('src', PATH + 'js/message.js');
-    m.addEventListener('load', function(){
-        c.setAttribute('src', PATH + 'js/chat.js');
-        c.addEventListener('load', function(){
-            window.chat = new ChatCreator();
-            chat.bindDOM();
-            chat.getMessages();
-        });
-    });
+    s.rel = 'stylesheet';
+    s.href = PATH + 'style/main.css';
+    
+    //http://tutorials.comandeer.pl/js-dynamic.html
+    m.src =  PATH + 'js/message.js';
+    c.src = PATH + 'js/chat.js';
+
+    m.addEventListener('load', loadHandler, false);
+    c.addEventListener('load', loadHandler, false);
 })(document.head.appendChild(document.createElement('link')), 
    document.head.appendChild(document.createElement('script')),
    document.head.appendChild(document.createElement('script')));
