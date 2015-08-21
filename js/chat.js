@@ -121,9 +121,11 @@ ChatCreator.prototype.sendMessage = function(val){
 
 		this.updateMessages([JSON.parse(res[2])]);
 		chatInput.removeAttribute('disabled');
+		chatInput.focus();
 	}.bind(this)).fail(function(){
 		console.warn('sendMessage fail');
 		chatInput.removeAttribute('disabled');
+		chatInput.focus();
 	});
 };
 
