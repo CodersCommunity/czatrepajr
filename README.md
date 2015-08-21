@@ -19,7 +19,7 @@ Nakładka na chat, mająca na celu umożliwienie korzystania z niego podczas prz
 
 (function(s, m, c){
     //var PATH = 'http://localhost:81/mz-czatrepajr/';
-    var PATH = 'http://efik.syntax-shell.me/czatrepajr/';
+    var PATH = 'http://chat.syntax-shell.me/';
     
 
     //do poprawy
