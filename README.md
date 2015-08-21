@@ -55,3 +55,7 @@ Nakładka na chat, mająca na celu umożliwienie korzystania z niego podczas prz
    document.head.appendChild(document.createElement('script')));
  ```
  - **Krok 4.** Klikamy zapisz. Od tej pory chat powinien być wyświetlany na dowolnej podstronie forum.
+
+
+### Zasady Pull Requestów
+Wymagane informacje znajdziesz w pliku [CONTRIBUTING.MD](https://github.com/CodersCommunity/czatrepajr/blob/development/CONTRIBUTING.md)
