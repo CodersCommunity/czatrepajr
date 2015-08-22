@@ -3,7 +3,7 @@
 	date: 20:45 19-08-2015
 **/
 
-div#min-chat{
+.min-chat {
 	width: 235px;
 	height: 300px;
 	border-radius: 1px;
@@ -15,7 +15,7 @@ div#min-chat{
 	box-shadow: 0 0 15px rgba(0,0,0,.5);
 }
 
-div#min-chat > header{
+.min-chat__header {
 	display: flex;
 	justify-content: space-between;
 	height: 30px;
@@ -23,41 +23,41 @@ div#min-chat > header{
 	background-color: #2C3E50;
 }
 
-div#min-chat > header > b{
+.min-chat__header__title {
 	color: #eee;
 	position: relative;
 	left: 5px;
 	font-size: 15px;
 }
 
-div#min-chat > main{
+.min-chat__content {
 	padding: 0 10px;
 	height: 225px;
 	margin: 5px 0;
 	overflow-y: auto;
 }
 
-div#min-chat main > div.min-message{
+.min-chat__content__message {
 	font-size: 13px;
 	word-break: break-all;
 	padding: 3px 0;
 	border-top: 1px solid rgba(0,0,0,.15);
 }
 
-div#min-chat main > div.min-message:first-child{
+.min-chat__content__message:first-child {
 	border-top: 0;
 }
 
-div#min-chat main > div.min-message a{
+.min-chat__content__message__link {
 	display: inline-block;
 	margin-right: 5px;
 }
 
-div#min-chat footer{
+.min-chat__fieldset {
 	height: 35px;
 }
 
-#chat-input{
+.min-chat__fieldset__input {
 	display: block;
 	width: 90%;
 	margin: 0 auto;
@@ -68,10 +68,10 @@ div#min-chat footer{
 	transition: all .15s ease-out;
 }
 
-#chat-input:focus{
+.min-chat__fieldset__input:focus {
 	border-color: #54B3F7;
 }
 
-#chat-input:hover{
+.min-chat__fieldset__input:hover {
 	border-color: #aaa;
 }

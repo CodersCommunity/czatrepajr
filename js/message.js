@@ -1,4 +1,4 @@
-function Message(data){
+function Message(data) {
 	this.id = Number(data.postid);
 
 	this.user = {
@@ -14,23 +14,33 @@ function Message(data){
 	this.createDOM();
 }
 
-Message.prototype.createDOM = function(){
-	this.$el = document.createElement('div');
-	this.$el.setAttribute('id', 'min-message' + this.id);
-	this.$el.setAttribute('title', 'Wysłano: ' + this.posted);
-	this.$el.classList.add('min-message');
+Message.prototype.createDOM = function() {
+	var user = this.user
+	,el = document.createElement('div');
+
+	el.id = 'min-message' + this.id;
+	el.title = 'Wysłano: ' + this.posted;
+	el.classList.add('min-chat__content__message');
+
+	//maybe innerHTML?
+	if(user.id < 0)
+		var $a = el.appendChild(document.createElement('span'));
+	else
+	{
+		var $a = el.appendChild(document.createElement('a'));
+		$a.href = 'http://forum.miroslawzelent.pl/user/' + encodeURIComponent(user.name);
+	}
+		$a.classList.add('min-chat__content__message__link');
+		$a.innerText = user.name;
 
 
-	var $a = this.$el.appendChild(document.createElement('a'));
-		$a.setAttribute('href', 'http://forum.miroslawzelent.pl/user/'+this.user.name.split(' ').join('+')); //escape() is strange O_o
-		$a.innerText = this.user.name;
+	var $c = el.appendChild(document.createElement('span'));
+	$c.innerHTML = this.value;  //value is already escaped from html tags
 
-
-	var $c = this.$el.appendChild(document.createElement('span'));
-		$c.innerHTML = this.value;  //value is already escaped from html tags
+	this.$el = el;
 }
 
-Message.prototype.getDOM = function(){
+Message.prototype.getDOM = function() {
 	//too lame
 	return this.$el;
 }
