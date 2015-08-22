@@ -15,20 +15,27 @@ function Message(data) {
 }
 
 Message.prototype.createDOM = function() {
-	var el = document.createElement('div');
+	var user = this.user
+	,el = document.createElement('div');
+
 	el.id = 'min-message' + this.id;
 	el.title = 'Wysłano: ' + this.posted;
 	el.classList.add('min-chat__content__message');
 
-
-	var $a = el.appendChild(document.createElement('a'));
-		$a.href = 'http://forum.miroslawzelent.pl/user/' + encodeURIComponent(this.user.name);
+	//maybe innerHTML?
+	if(user.id < 0)
+		var $a = el.appendChild(document.createElement('span'));
+	else
+	{
+		var $a = el.appendChild(document.createElement('a'));
+		$a.href = 'http://forum.miroslawzelent.pl/user/' + encodeURIComponent(user.name);
+	}
 		$a.classList.add('min-chat__content__message__link');
-		$a.innerText = this.user.name;
+		$a.innerText = user.name;
 
 
 	var $c = el.appendChild(document.createElement('span'));
-		$c.innerHTML = this.value;  //value is already escaped from html tags
+	$c.innerHTML = this.value;  //value is already escaped from html tags
 
 	this.$el = el;
 }

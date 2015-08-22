@@ -80,14 +80,16 @@ Chat.prototype.commandParse = function(val) {
 Chat.prototype.updateMessages = function(m){
 	m = m.reverse();
 	m.forEach(function(i){
-		if(this.messages.has(Number(i.postid)))return;
+		if(this.messages.has(Number(i.postid)))
+			return;
 
 		this.messages.add(Number(i.postid));
 
-		if(Number(i.postid) > this.lastID)this.lastID = Number(i.postid);
+		if(Number(i.postid) > this.lastID)
+			this.lastID = Number(i.postid);
 
 		this.$box.appendChild(new Message(i).getDOM());
-		this.$box.scrollTop = 99999999999;
+		this.$box.scrollTop = this.$box.scrollHeight;
 		//notify?
 	}.bind(this));
 };
@@ -111,7 +113,8 @@ Chat.prototype.sendMessage = function(val){
 	var chatInput = document.getElementById('chat-input');
 	chatInput.value = '';
 
-	if(this.commandParse.bind(this)(val))return;
+	if(this.commandParse.bind(this)(val))
+		return;
 
 	chatInput.setAttribute('disabled', 'disabled');
 	$.post(this.url, {
