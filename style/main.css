@@ -39,7 +39,7 @@
 
 .min-chat__content__message {
 	font-size: 13px;
-	word-break: keep-all;
+	word-wrap: break-word;
 	padding: 3px 0;
 	border-top: 1px solid rgba(0,0,0,.15);
 }
@@ -65,7 +65,7 @@
 	background-color: #fff;
 	height: 29px;
 	padding: 2px 4px;
-	transition: all .15s ease-out;
+	transition: all .16s ease-out;
 }
 
 .min-chat__fieldset__input:focus {
