@@ -39,7 +39,7 @@
 
 .min-chat__content__message {
 	font-size: 13px;
-	word-break: break-all;
+	word-break: keep-all;
 	padding: 3px 0;
 	border-top: 1px solid rgba(0,0,0,.15);
 }

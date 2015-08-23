@@ -13,7 +13,7 @@ function Chat() {
 	this.url = 'http://forum.miroslawzelent.pl/chat';
 
 	this.userID = null;
-	this.lastID = 0;
+	this.lastID = localStorage.getItem('lastID') || 0;
 	this.users = new Map();
 	this.messages = new Set();
 
@@ -22,7 +22,7 @@ function Chat() {
 
 Chat.prototype.bindDOM = function(e) {
 	document.getElementById('chat-input').addEventListener('keyup', function(e){
-		if(e.which != 13 || document.getElementById('chat-input').value.trim().length < 2 || e.shiftKey)
+		if(e.which != 13 || document.getElementById('chat-input').value.trim().length < 1 || e.shiftKey)
 			return;
 
 		this.sendMessage(document.getElementById('chat-input').value.trim());
@@ -57,6 +57,17 @@ Chat.prototype.setupCommands = function() {
 			'/clear'
 			,function() {
 				this.$box.innerHTML = '';
+				localStorage.setItem('lastID', this.lastID);
+				this.messages.clear();
+			}.bind(this)
+		]
+		,[
+			'/all'
+			,function() {
+				this.lastID = 0;
+				localStorage.removeItem('lastID');
+				this.messages.clear();
+				this.getMessagesRequest();
 			}.bind(this)
 		]
 		,[
@@ -92,6 +103,7 @@ Chat.prototype.updateMessages = function(m){
 		this.$box.scrollTop = this.$box.scrollHeight;
 		//notify?
 	}.bind(this));
+	this.lastID = localStorage.getItem('lastID') || this.lastID;
 };
 
 Chat.prototype.updateUsers = function(u){
@@ -143,6 +155,11 @@ Chat.prototype.sendMessage = function(val){
 
 Chat.prototype.getMessages = function(){
 	if(this.stop)return;
+	this.getMessagesRequest();
+	setTimeout(this.getMessages.bind(this), 5500);
+};
+
+Chat.prototype.getMessagesRequest = function() {
 
 	$.post(this.url, {
 		ajax_get_messages: this.lastID
@@ -163,6 +180,4 @@ Chat.prototype.getMessages = function(){
 		console.warn('getMessages fail');
 	});
 
-	setTimeout(this.getMessages.bind(this), 1500);
 };
-
