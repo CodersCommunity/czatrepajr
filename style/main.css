@@ -37,7 +37,7 @@
     color: #eee;
 }
 
-.min-chat__content__collapsed {
+.min-chat__content--collapsed {
     height: 0;
 }
 
