@@ -1,77 +1,88 @@
-/**
+/*
 	author: bartek
 	date: 20:45 19-08-2015
-**/
+*/
 
 .min-chat {
-	width: 235px;
-	height: 300px;
-	border-radius: 1px;
-	background-color: #eaeaea;
-	position: fixed;
-	bottom: 5px;
-	right: 15px;
+    width: 235px;
+    border-radius: 1px;
+    background-color: #eaeaea;
+    position: fixed;
+    bottom: 5px;
+    right: 15px;
 
-	box-shadow: 0 0 15px rgba(0,0,0,.5);
+    box-shadow: 0 0 15px rgba(0, 0, 0, .5);
 }
 
 .min-chat__header {
-	display: flex;
-	justify-content: space-between;
-	height: 30px;
-	line-height: 30px;
-	background-color: #2C3E50;
+    display: flex;
+    justify-content: space-between;
+    height: 30px;
+    line-height: 30px;
+    background-color: #2C3E50;
 }
 
 .min-chat__header__title {
-	color: #eee;
-	position: relative;
-	left: 5px;
-	font-size: 15px;
+    color: #eee;
+    position: relative;
+    left: 5px;
+    margin: 0;
+    font-size: 15px;
+}
+
+.min-chat__header__switch {
+    background-color: #2C3E50;
+    position: relative;
+    border: 0px;
+    color: #eee;
+}
+
+.min-chat__content__collapsed {
+    height: 0;
 }
 
 .min-chat__content {
-	padding: 0 10px;
-	height: 225px;
-	margin: 5px 0;
-	overflow-y: auto;
+    height: 250px;
+    padding: 0 10px;
+    margin: 5px 0;
+    overflow-y: auto;
 }
 
 .min-chat__content__message {
-	font-size: 13px;
-	word-wrap: break-word;
-	padding: 3px 0;
-	border-top: 1px solid rgba(0,0,0,.15);
+    font-size: 13px;
+    word-wrap: break-word;
+    padding: 3px 0;
+    border-top: 1px solid rgba(0, 0, 0, .15);
 }
 
 .min-chat__content__message:first-child {
-	border-top: 0;
+    border-top: 0;
 }
 
 .min-chat__content__message__link {
-	display: inline-block;
-	margin-right: 5px;
+    display: inline-block;
+    margin-right: 5px;
 }
 
 .min-chat__fieldset {
-	height: 35px;
+    height: 40px;
 }
 
 .min-chat__fieldset__input {
-	display: block;
-	width: 90%;
-	margin: 0 auto;
-	border: 1px solid #ddd;
-	background-color: #fff;
-	height: 29px;
-	padding: 2px 4px;
-	transition: all .16s ease-out;
+    display: block;
+    width: 90%;
+    margin: 0 auto;
+    border: 1px solid #ddd;
+    background-color: #fff;
+    height: 29px;
+    padding: 2px 4px;
+    transition: all .16s ease-out;
 }
 
 .min-chat__fieldset__input:focus {
-	border-color: #54B3F7;
+    border-color: #54B3F7;
 }
 
 .min-chat__fieldset__input:hover {
-	border-color: #aaa;
+    border-color: #aaa;
 }
