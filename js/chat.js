@@ -1,183 +1,218 @@
 /*
-	author: bartek
-	date: 23:49 19-08-2015
-*/
+ author: bartek
+ date: 23:49 19-08-2015
+ */
 
 function Chat() {
-	this.$box = document.querySelector('.min-chat__content');
-
-	this.stop = false;
-	this.notifyTimeout = null;
-	this.defaultTitle = document.title;
-	this.toSeen = false;
-	this.url = 'http://forum.miroslawzelent.pl/chat';
-
-	this.userID = null;
-	this.lastID = localStorage.getItem('lastID') || 0;
-	this.users = new Map();
-	this.messages = new Set();
-
-	this.setupCommands();
+    this.url = 'http://forum.miroslawzelent.pl/chat';
+    this.userID = null;
+    this.users = new Map();
+    this.messages = new Set();
+    this.toggleNamed = ["Wyłącz", "Włącz"];
+    this.stop = JSON.parse(localStorage.getItem("stop"));
+    this.lastID = localStorage.getItem('lastID') || 0;
+    this.$box = document.querySelector('.min-chat__content');
+    this.setupCommands();
 }
 
-Chat.prototype.bindDOM = function(e) {
-	document.getElementById('chat-input').addEventListener('keyup', function(e){
-		if(e.which != 13 || document.getElementById('chat-input').value.trim().length < 1 || e.shiftKey)
-			return;
-
-		this.sendMessage(document.getElementById('chat-input').value.trim());
-	}.bind(this));
+Chat.prototype.logger = function (name) {
+    var consoleLogger = localStorage.getItem('consoleLogger') || false;
+    if (consoleLogger) {
+        console.log(name);
+    }
 };
 
-Chat.prototype.systemMessage = function(val) {
-	this.updateMessages([{
-		postid: 0 - Math.round(Math.random()*1000),
-		userid: -1,
-		username: 'System',
-		posted: new Date().toISOString().substr(0, 19).split('T').join(' '),
-		message: val
-	}]);
+Chat.prototype.bindDOM = function (e) {
+    document.getElementById('chat-input').addEventListener('keyup', function (e) {
+        if (e.which != 13 || document.getElementById('chat-input').value.trim().length < 1 || e.shiftKey)
+            return;
+
+        this.sendMessage(document.getElementById('chat-input').value.trim());
+    }.bind(this));
+
+    document.getElementById('min-chat-switch').addEventListener('click', this.toggleChat.bind(this));
 };
 
-Chat.prototype.setupCommands = function() {
-	this.commands = new Map([
-		[
-			'/online'
-			,function() {
-				var a = '';
 
-				for(var i of this.users.values()) {
-					a += (a===''?'':', ') + (i.idle?'[i] ':'') + i.name;
-				}
-
-				this.systemMessage('online: ' + a);
-			}.bind(this)
-		]
-		,[
-			'/clear'
-			,function() {
-				this.$box.innerHTML = '';
-				localStorage.setItem('lastID', this.lastID);
-				this.messages.clear();
-			}.bind(this)
-		]
-		,[
-			'/all'
-			,function() {
-				this.lastID = 0;
-				localStorage.removeItem('lastID');
-				this.messages.clear();
-				this.getMessagesRequest();
-			}.bind(this)
-		]
-		,[
-			'/lastid'
-			,function() {
-				this.systemMessage('lastID: ' + this.lastID);
-			}.bind(this)
-		]
-	]);
+Chat.prototype.toggleChat = function () {
+    this.stop = !this.stop;
+    localStorage["stop"] = this.stop;
+    this.checkChat();
+    this.logger("Czatrepajr::toggleChat -> " + this.stop);
 };
 
-Chat.prototype.commandParse = function(val) {
-	if(!this.commands.has(val))
-		return false;
+Chat.prototype.checkChat = function () {
+    var switchButton = document.getElementById('min-chat-switch');
+    var chatContent = document.getElementById('min-chat-content');
+    switchButton.innerHTML = this.toggleNamed[Number(this.stop)];
 
-	this.commands.get(val)();
-
-	return true;
+    if (this.stop) {
+        chatContent.className = "min-chat__content--collapsed";
+    } else {
+        chatContent.className = "";
+    }
+    this.logger("Czatrepajr::checkChat -> " + chatContent.className);
 };
 
-Chat.prototype.updateMessages = function(m){
-	m = m.reverse();
-	m.forEach(function(i){
-		if(this.messages.has(Number(i.postid)))
-			return;
-
-		this.messages.add(Number(i.postid));
-
-		if(Number(i.postid) > this.lastID)
-			this.lastID = Number(i.postid);
-
-		this.$box.appendChild(new Message(i).getDOM());
-		this.$box.scrollTop = this.$box.scrollHeight;
-		//notify?
-	}.bind(this));
-	this.lastID = localStorage.getItem('lastID') || this.lastID;
+Chat.prototype.systemMessage = function (value) {
+    this.updateMessages([{
+        postid: 0 - Math.round(Math.random() * 1000),
+        userid: -1,
+        username: 'System',
+        posted: new Date().toISOString().substr(0, 19).split('T').join(' '),
+        message: value
+    }]);
 };
 
-Chat.prototype.updateUsers = function(u){
-	this.users.clear();
-
-	u.forEach(function(o){
-		this.users.set(Number(o.userid), {
-			name: o.username
-			,idle: (o.idle==="1")
-			,level: Number(o.level)
-			,kicked: Number(o.kicked) //or bool maybe?
-			,kickable: Number(o.kickable) //the same? xD
-		});
-	}.bind(this));
+Chat.prototype.setupCommands = function () {
+    this.commands = new Map([
+        [
+            '/online', this.onlineCommand.bind(this)
+        ]
+        , [
+            '/clear', this.clearCommand.bind(this)
+        ]
+        , [
+            '/all', this.allCommand.bind(this)
+        ]
+    ]);
 };
 
-Chat.prototype.sendMessage = function(val){
+Chat.prototype.commandParse = function (value) {
+    if (!this.commands.has(value))
+        return false;
 
-	var chatInput = document.getElementById('chat-input');
-	chatInput.value = '';
-
-	if(this.commandParse.bind(this)(val))
-		return;
-
-	chatInput.setAttribute('disabled', 'disabled');
-	$.post(this.url, {
-		ajax_add_message: val
-		,ajax_add_lastid: this.lastID
-	}).done(function(res){
-		if(res.indexOf("Nie jesteś już zalogowany.") > -1){
-			this.stop = true;
-			return;
-		}
-
-		res = res.split('\n');
-
-		if(!this.userID)
-			this.userID = Number(res[1]);
-
-		this.updateMessages([JSON.parse(res[2])]);
-		chatInput.removeAttribute('disabled');
-		chatInput.focus();
-	}.bind(this)).fail(function(){
-		console.warn('sendMessage fail');
-		chatInput.removeAttribute('disabled');
-		chatInput.focus();
-	});
+    this.commands.get(value)();
+    return true;
 };
 
-Chat.prototype.getMessages = function(){
-	if(this.stop)return;
-	this.getMessagesRequest();
-	setTimeout(this.getMessages.bind(this), 5500);
+Chat.prototype.updateMessages = function (arrayOfMessages) {
+    arrayOfMessages = arrayOfMessages.reverse();
+    arrayOfMessages.forEach(function (post) {
+        if (this.messages.has(Number(post.postid)))
+            return;
+
+        this.messages.add(Number(post.postid));
+
+        if (Number(post.postid) > this.lastID)
+            this.lastID = Number(post.postid);
+
+        this.$box.appendChild(new Message(post).getDOM());
+        this.$box.scrollTop = this.$box.scrollHeight;
+    }.bind(this));
+    this.logger("Czatrepajr::updateMessages->" + this.lastID);
 };
 
-Chat.prototype.getMessagesRequest = function() {
+Chat.prototype.updateUsers = function (arrayOfUsers) {
+    this.users.clear();
+    arrayOfUsers.forEach(function (user) {
+        this.users.set(Number(user.userid), {
+            name: user.username
+            , idle: (user.idle === "1")
+            , level: Number(user.level)
+            , kicked: Number(user.kicked)
+            , kickable: Number(user.kickable)
+        });
+    }.bind(this));
+    this.logger("Czatrepajr::updateUsers->" + this.lastID);
+};
 
-	$.post(this.url, {
-		ajax_get_messages: this.lastID
-	}).done(function(res){
-		if(res.indexOf("Nie jesteś już zalogowany.") > -1){
-			this.stop = true;
-			return;
-		}
+Chat.prototype.sendMessage = function (value) {
 
-		res = res.split('\n');
+    var chatInput = document.getElementById('chat-input');
+    chatInput.value = '';
 
-		if(!this.userID)
-			this.userID = Number(res[1]);
+    if (this.commandParse.bind(this)(value))
+        return;
 
-		this.updateMessages(JSON.parse(res[2]));
-		this.updateUsers(JSON.parse(res[3]));
-	}.bind(this)).fail(function(){
-		console.warn('getMessages fail');
-	});
+    chatInput.setAttribute('disabled', 'disabled');
+    $.post(this.url, {
+        ajax_add_message: value
+        , ajax_add_lastid: this.lastID
+    }).done(function (response) {
+        if (response.indexOf("Nie jesteś już zalogowany.") > -1) {
+            this.stop = true;
+            return;
+        }
 
+        response = response.split('\n');
+
+        if (!this.userID)
+            this.userID = Number(response[1]);
+
+
+        this.logger("Czatrepajr::sendMessage(done)->" + value);
+        this.updateMessages([JSON.parse(response[2])]);
+        chatInput.removeAttribute('disabled');
+        chatInput.focus();
+
+    }.bind(this)).fail(function () {
+        chatInput.removeAttribute('disabled');
+        chatInput.focus();
+        this.logger("Czatrepajr::sendMessage(fail)->" + value);
+    });
+};
+
+Chat.prototype.getMessages = function () {
+    this.logger("Czatrepajr::getMessages");
+    this.getMessagesRequest();
+    setTimeout(this.getMessages.bind(this), 5500);
+};
+
+Chat.prototype.getMessagesRequest = function () {
+
+    if (this.stop) {
+        this.checkChat();
+        return;
+    }
+
+    $.post(this.url, {
+        ajax_get_messages: this.lastID
+    }).done(function (response) {
+        if (response.indexOf("Nie jesteś już zalogowany.") > -1) {
+            return;
+        }
+
+        response = response.split('\n');
+        this.userID = Number(response[1]);
+        this.logger("Czatrepajr::getMessagesRequest->" + this.lastID);
+        this.updateMessages(JSON.parse(response[2]));
+        this.updateUsers(JSON.parse(response[3]));
+    }.bind(this)).fail(function () {
+        console.warn('getMessages fail');
+    });
+
+};
+
+/*
+ ==============
+ Commands
+ ==============
+ */
+
+Chat.prototype.onlineCommand = function () {
+    var onlineUsers = '';
+    for (var user of this.users.values()) {
+        onlineUsers += ( onlineUsers === '' ? '' : ', ') + (user.idle ? '[i] ' : '') + user.name;
+    }
+    this.systemMessage('online: ' + onlineUsers);
+    this.logger("COMMAND /online USED: " + onlineUsers);
+};
+
+Chat.prototype.clearCommand = function () {
+
+    this.$box.innerHTML = '';
+    this.messages.clear();
+    this.logger("COMMAND /clear USED: " + this.lastID);
+    localStorage["lastID"] = this.lastID;
+    this.getMessagesRequest();
+
+};
+
+Chat.prototype.allCommand = function () {
+    this.lastID = 0;
+    this.messages.clear();
+    this.logger("COMMAND /all USED: " + this.lastID);
+    localStorage.removeItem('lastID');
+    this.getMessagesRequest();
 };

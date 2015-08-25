@@ -35,15 +35,18 @@ Nakładka na chat, mająca na celu umożliwienie korzystania z niego podczas prz
     
 
     //do poprawy
-    $('<section class="min-chat"> \
-        <header class="min-chat__header"> \
-            <b class="min-chat__header__title">Zminimalizowany chat</b> \
-        </header> \
+$('<section class="min-chat"> \
+    <header class="min-chat__header"> \
+        <b class="min-chat__header__title">Czatrepajr</b> \
+     <button id="min-chat-switch" class="min-chat__header__switch">Wyłącz</button> \
+    </header> \
+    <div id="min-chat-content"> \
         <div class="min-chat__content"></div> \
         <div class="min-chat__fieldset"> \
             <input type="text" id="chat-input" class="min-chat__fieldset__input" spellcheck="true"> \
         </div> \
-    </section>').appendTo('body');
+  </div> \
+</section>').appendTo('body');
 
     s.rel = 'stylesheet';
     s.href = PATH + 'style/main.css';
