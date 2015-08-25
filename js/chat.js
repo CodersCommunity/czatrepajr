@@ -4,13 +4,14 @@
  */
 
 function Chat() {
-    this.$box = document.querySelector('.min-chat__content');
-    this.stop = false;
     this.url = 'http://forum.miroslawzelent.pl/chat';
     this.userID = null;
-    this.lastID = localStorage.getItem('lastID') || 0;
     this.users = new Map();
     this.messages = new Set();
+    this.toggleNamed = ["Wyłącz", "Włącz"];
+    this.stop = JSON.parse(localStorage.getItem("stop"));
+    this.lastID = localStorage.getItem('lastID') || 0;
+    this.$box = document.querySelector('.min-chat__content');
     this.setupCommands();
 }
 
@@ -28,6 +29,29 @@ Chat.prototype.bindDOM = function (e) {
 
         this.sendMessage(document.getElementById('chat-input').value.trim());
     }.bind(this));
+
+    document.getElementById('min-chat-switch').addEventListener('click', this.toggleChat.bind(this));
+};
+
+
+Chat.prototype.toggleChat = function () {
+    this.stop = !this.stop;
+    localStorage["stop"] = this.stop;
+    this.checkChat();
+    this.logger("Czatrepajr::toggleChat -> " + this.stop);
+};
+
+Chat.prototype.checkChat = function () {
+    var switchButton = document.getElementById('min-chat-switch');
+    var chatContent = document.getElementById('min-chat-content');
+    switchButton.innerHTML = this.toggleNamed[Number(this.stop)];
+
+    if (this.stop) {
+        chatContent.className = "min-chat__content--collapsed";
+    } else {
+        chatContent.className = "";
+    }
+    this.logger("Czatrepajr::checkChat -> " + chatContent.className);
 };
 
 Chat.prototype.systemMessage = function (value) {
@@ -130,18 +154,22 @@ Chat.prototype.sendMessage = function (value) {
 };
 
 Chat.prototype.getMessages = function () {
-    if (this.stop)return;
+    this.logger("Czatrepajr::getMessages");
     this.getMessagesRequest();
     setTimeout(this.getMessages.bind(this), 5500);
 };
 
 Chat.prototype.getMessagesRequest = function () {
 
+    if (this.stop) {
+        this.checkChat();
+        return;
+    }
+
     $.post(this.url, {
         ajax_get_messages: this.lastID
     }).done(function (response) {
         if (response.indexOf("Nie jesteś już zalogowany.") > -1) {
-            this.stop = true;
             return;
         }
 
