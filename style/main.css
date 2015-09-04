@@ -48,6 +48,27 @@
     overflow-y: auto;
 }
 
+.min-chat__notify{
+    font-size: 13px;
+    color: #fff;
+    text-align: center;
+    padding: 4px 0;
+    overflow: hidden;
+}
+
+.min-chat__notify--left{
+    background-color: #c0392b;
+}
+
+.min-chat__notify--join{
+    background-color: #27ae60;
+}
+
+.min-chat__notify--hidden{
+    height: 0;
+    padding: 0;
+}
+
 .min-chat__content__message {
     font-size: 13px;
     word-wrap: break-word;

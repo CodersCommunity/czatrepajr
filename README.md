@@ -18,7 +18,7 @@ Nakładka na chat, mająca na celu umożliwienie korzystania z niego podczas prz
 // ==/UserScript==
 
 (function(s, m, c){
-    //var PATH = 'http://localhost:81/mz-czatrepajr/';
+    //var PATH = 'http://localhost:81/chatRepajr/'
     var PATH = 'http://chat.syntax-shell.me/'
     ,toLoad = 2
     ,loadHandler = function()
@@ -41,6 +41,8 @@ $('<section class="min-chat"> \
      <button id="min-chat-switch" class="min-chat__header__switch">Wyłącz</button> \
     </header> \
     <div id="min-chat-content"> \
+        <div class="min-chat__notify min-chat__notify--left min-chat__notify--hidden"></div> \
+        <div class="min-chat__notify min-chat__notify--join min-chat__notify--hidden"></div> \
         <div class="min-chat__content"></div> \
         <div class="min-chat__fieldset"> \
             <input type="text" id="chat-input" class="min-chat__fieldset__input" spellcheck="true"> \

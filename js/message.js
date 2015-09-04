@@ -18,7 +18,6 @@ Message.prototype.createDOM = function () {
     el.title = 'Wysłano: ' + this.posted;
     el.classList.add('min-chat__content__message');
 
-    //maybe innerHTML?
     if (user.id < 0)
         var $a = el.appendChild(document.createElement('span'));
     else {

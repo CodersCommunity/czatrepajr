@@ -13,6 +13,7 @@ function Chat() {
     this.lastID = localStorage.getItem('lastID') || 0;
     this.$box = document.querySelector('.min-chat__content');
     this.setupCommands();
+    this.systemID = -1;
 }
 
 Chat.prototype.logger = function (name) {
@@ -36,8 +37,9 @@ Chat.prototype.bindDOM = function (e) {
 
 Chat.prototype.toggleChat = function () {
     this.stop = !this.stop;
-    localStorage["stop"] = this.stop;
+    localStorage.setItem('stop', this.stop);
     this.checkChat();
+
     this.logger("Czatrepajr::toggleChat -> " + this.stop);
 };
 
@@ -56,12 +58,14 @@ Chat.prototype.checkChat = function () {
 
 Chat.prototype.systemMessage = function (value) {
     this.updateMessages([{
-        postid: 0 - Math.round(Math.random() * 1000),
+        postid: this.systemID,
         userid: -1,
         username: 'System',
         posted: new Date().toISOString().substr(0, 19).split('T').join(' '),
         message: value
     }]);
+
+    this.systemID--;
 };
 
 Chat.prototype.setupCommands = function () {
@@ -86,6 +90,51 @@ Chat.prototype.commandParse = function (value) {
     return true;
 };
 
+Chat.prototype.updateNotifies = function (j, l) {
+    if (j.length > 0)
+        document.querySelector('.min-chat__notify--join').innerText = j.join(', ') + ' ' + (j.length > 1 ? 'dołączyli' : 'dołączył') + ' do chatu.';
+    if (l.length > 0)
+        document.querySelector('.min-chat__notify--left').innerText = l.join(', ') + ' ' + (j.length > 1 ? 'opuścili' : 'opuścił') + ' chat.';
+}
+
+Chat.prototype.compareUsers = function (_c) {
+    if (this.systemID == -1) {
+        this.systemID--;
+        return;
+    }
+
+    var left = [], join = [];
+
+    for (var i of _c.keys()) {
+        if (!this.users.has(i))
+            left.push(_c.get(i).name);
+    }
+
+    for (var i of this.users.keys()) {
+        if (!_c.has(i))
+            join.push(this.users.get(i).name);
+    }
+
+
+    this.updateNotifies(join, left);
+
+    //hide if empty
+    if (left.length < 1) {
+        document.querySelector('.min-chat__notify--left').classList.add('min-chat__notify--hidden');
+    }
+    else {
+        document.querySelector('.min-chat__notify--left').classList.remove('min-chat__notify--hidden');
+    }
+
+    if (join.length < 1) {
+        document.querySelector('.min-chat__notify--join').classList.add('min-chat__notify--hidden');
+    }
+    else {
+        document.querySelector('.min-chat__notify--join').classList.remove('min-chat__notify--hidden');
+    }
+
+};
+
 Chat.prototype.updateMessages = function (arrayOfMessages) {
     arrayOfMessages = arrayOfMessages.reverse();
     arrayOfMessages.forEach(function (post) {
@@ -104,6 +153,11 @@ Chat.prototype.updateMessages = function (arrayOfMessages) {
 };
 
 Chat.prototype.updateUsers = function (arrayOfUsers) {
+    //create copy of currently users
+    var _c = new Map();
+    for (var i of this.users.keys())
+        _c.set(i, this.users.get(i));
+
     this.users.clear();
     arrayOfUsers.forEach(function (user) {
         this.users.set(Number(user.userid), {
@@ -114,6 +168,8 @@ Chat.prototype.updateUsers = function (arrayOfUsers) {
             , kickable: Number(user.kickable)
         });
     }.bind(this));
+
+    this.compareUsers(_c);
     this.logger("Czatrepajr::updateUsers->" + this.lastID);
 };
 
