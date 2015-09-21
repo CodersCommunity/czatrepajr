@@ -54,6 +54,7 @@
     text-align: center;
     padding: 4px 0;
     overflow: hidden;
+    height: 30px;
 }
 
 .min-chat__notify--left{
