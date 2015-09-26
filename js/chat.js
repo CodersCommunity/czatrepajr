@@ -14,6 +14,7 @@ function Chat() {
     this.$box = document.querySelector('.min-chat__content');
     this.setupCommands();
     this.systemID = -1;
+    this.maxScrolled = true;
 }
 
 Chat.prototype.logger = function (name) {
@@ -23,6 +24,23 @@ Chat.prototype.logger = function (name) {
     }
 };
 
+Chat.prototype.autocomplete = function(val) {
+  //get last word
+  var words = val.split(' ')
+    , word = words[words.length - 1];
+
+  if(word.startsWith('@') && word.length > 1) {
+    for(var user of this.users.values()) {
+      if(user.name.toLowerCase().startsWith(word.substr(1).toLowerCase())){
+        words[words.length - 1] = `@${user.name.split(' ').join('_')} `;
+        break;
+      }
+    }
+  }
+
+  return words.join(' ');
+}
+
 Chat.prototype.bindDOM = function (e) {
     document.getElementById('chat-input').addEventListener('keyup', function (e) {
         if (e.which != 13 || document.getElementById('chat-input').value.trim().length < 1 || e.shiftKey)
@@ -30,6 +48,22 @@ Chat.prototype.bindDOM = function (e) {
 
         this.sendMessage(document.getElementById('chat-input').value.trim());
     }.bind(this));
+
+    document.getElementById('chat-input').addEventListener('keydown', function(_this, e) {
+      if(e.which === 9 && this.value.trim().length > 1){
+        this.value = _this.autocomplete.call(_this, this.value);
+
+        e.preventDefault();
+        return;
+      }
+    }.bind(document.getElementById('chat-input'), this), false);
+
+    this.$box.addEventListener('scroll', function(_this) {
+      if(this.scrollHeight - this.scrollTop !== this.clientHeight)
+        _this.maxScrolled = false;
+      else
+        _this.maxScrolled = true;
+    }.bind(this.$box, this), false);
 
     document.getElementById('min-chat-switch').addEventListener('click', this.toggleChat.bind(this));
 };
@@ -147,7 +181,8 @@ Chat.prototype.updateMessages = function (arrayOfMessages) {
             this.lastID = Number(post.postid);
 
         this.$box.appendChild(new Message(post).getDOM());
-        this.$box.scrollTop = this.$box.scrollHeight;
+        if(this.maxScrolled)
+          this.$box.scrollTop = this.$box.scrollHeight;
     }.bind(this));
     this.logger("Czatrepajr::updateMessages->" + this.lastID);
 };
