@@ -23,6 +23,23 @@ Chat.prototype.logger = function (name) {
     }
 };
 
+Chat.prototype.autocomplete = function(val) {
+  //get last word
+  var words = val.split(' ')
+    , word = words[words.length - 1];
+
+  if(word.startsWith('@') && word.length > 1) {
+    for(var user of this.users.values()) {
+      if(user.name.toLowerCase().startsWith(word.substr(1).toLowerCase())){
+        words[words.length - 1] = `@${user.name} `;
+        break;
+      }
+    }
+  }
+
+  return words.join(' ');
+}
+
 Chat.prototype.bindDOM = function (e) {
     document.getElementById('chat-input').addEventListener('keyup', function (e) {
         if (e.which != 13 || document.getElementById('chat-input').value.trim().length < 1 || e.shiftKey)
@@ -30,6 +47,15 @@ Chat.prototype.bindDOM = function (e) {
 
         this.sendMessage(document.getElementById('chat-input').value.trim());
     }.bind(this));
+
+    document.getElementById('chat-input').addEventListener('keydown', function(_this, e) {
+      if(e.which === 9 && this.value.trim().length > 1){
+        this.value = _this.autocomplete.call(_this, this.value);
+
+        e.preventDefault();
+        return;
+      }
+    }.bind(document.getElementById('chat-input'), this), false);
 
     document.getElementById('min-chat-switch').addEventListener('click', this.toggleChat.bind(this));
 };
