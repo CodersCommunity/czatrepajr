@@ -29,7 +29,18 @@ Message.prototype.createDOM = function () {
 
 
     var $c = el.appendChild(document.createElement('span'));
-    $c.innerHTML = this.value;  //value is already escaped from html tags
+    var content = this.value.split(' ');
+    for(var word = 0; word < content.length; word++) {
+      if(content[word].startsWith('@') && content[word].length > 1){
+        var spaces = content[word].match(/_/g) || [];
+        spaces = spaces.length;
+
+        content[word] = `<b>${content[word].split('_').join(' ')}</b>`;
+        word += spaces;
+      }
+    }
+
+    $c.innerHTML = content.join(' ');  //value is already escaped from html tags
 
     this.$el = el;
 };
