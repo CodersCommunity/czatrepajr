@@ -10,58 +10,44 @@ Nakładka na chat, mająca na celu umożliwienie korzystania z niego podczas prz
 
  - **Krok 3.** Kasujemy to co jest w edytorze i wklejamy poniższy skrypt :
  ```js
-// ==UserScript==
-// @name         CzatRepajr
-// @version      1.0
-// @author       Magic
-// @include      /^http:\/\/(www\.)?forum\.miroslawzelent\.pl(\/)?((?!chat).)*$/
-// ==/UserScript==
+ // ==UserScript==
+ // @name         CzatRepajr
+ // @version      1.0
+ // @author       Magic
+ // @include      /^http:\/\/(www\.)?forum\.miroslawzelent\.pl(\/)?((?!chat).)*$/
+ // ==/UserScript==
 
-(function(s, m, c){
-    //var PATH = 'http://localhost:81/chatRepajr/'
-    var PATH = 'http://chat.syntax-shell.me/'
-    ,toLoad = 2
-    ,loadHandler = function()
-    {
-        if(!--toLoad)
-            init();
-    }
-    ,init = function()
-    {
-        var chat = new Chat();
-        chat.bindDOM();
-        chat.getMessages();
-    }
-    
+ (function(s, m, c, h){
+     //var PATH = 'http://localhost:81/czatrepajr/'
+     var PATH = 'http://chat.syntax-shell.me/'
+     ,toLoad = 3
+     ,loadHandler = function()
+     {
+         if(!--toLoad)
+             init();
+     }
+     ,init = function()
+     {
+         var chat = new Chat();
+         chat.bindDOM();
+         chat.getMessages();
+     }
 
-    //do poprawy
-$('<section class="min-chat"> \
-    <header class="min-chat__header"> \
-        <b class="min-chat__header__title">Czatrepajr</b> \
-     <button id="min-chat-switch" class="min-chat__header__switch">Wyłącz</button> \
-    </header> \
-    <div id="min-chat-content"> \
-        <div class="min-chat__notify min-chat__notify--left min-chat__notify--hidden"></div> \
-        <div class="min-chat__notify min-chat__notify--join min-chat__notify--hidden"></div> \
-        <div class="min-chat__content"></div> \
-        <div class="min-chat__fieldset"> \
-            <input type="text" id="chat-input" class="min-chat__fieldset__input" spellcheck="true"> \
-        </div> \
-  </div> \
-</section>').appendTo('body');
+     s.rel = 'stylesheet';
+     s.href = PATH + 'style/main.css';
 
-    s.rel = 'stylesheet';
-    s.href = PATH + 'style/main.css';
-    
-    //http://tutorials.comandeer.pl/js-dynamic.html
-    m.src =  PATH + 'js/message.js';
-    c.src = PATH + 'js/chat.js';
+     //http://tutorials.comandeer.pl/js-dynamic.html
+     m.src =  PATH + 'js/message.js';
+     c.src = PATH + 'js/chat.js';
+     h.src = PATH + 'js/skeleton.js';
 
-    m.addEventListener('load', loadHandler, false);
-    c.addEventListener('load', loadHandler, false);
-})(document.head.appendChild(document.createElement('link')), 
-   document.head.appendChild(document.createElement('script')),
-   document.head.appendChild(document.createElement('script')));
+     m.addEventListener('load', loadHandler, false);
+     c.addEventListener('load', loadHandler, false);
+     h.addEventListener('load', loadHandler, false);
+ })(document.head.appendChild(document.createElement('link')),
+    document.head.appendChild(document.createElement('script')),
+    document.head.appendChild(document.createElement('script')),
+    document.head.appendChild(document.createElement('script')));
  ```
  - **Krok 4.** Klikamy zapisz. Od tej pory chat powinien być wyświetlany na dowolnej podstronie forum.
 
