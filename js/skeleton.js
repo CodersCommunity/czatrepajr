@@ -1,6 +1,8 @@
 $('<section class="min-chat"> \
 <header class="min-chat__header"> \
-    <b class="min-chat__header__title">Czatrepajr</b> \
+    <b class="min-chat__header__title">\
+            <img src="http://i.imgur.com/RKJMsl8.png" class="min-chat__icon" >\
+            Czatrepajr</b> \
  <button id="min-chat-switch" class="min-chat__header__switch">Wyłącz</button> \
 </header> \
 <div id="min-chat-content"> \
