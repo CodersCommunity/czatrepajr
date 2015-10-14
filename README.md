@@ -20,7 +20,7 @@ Nakładka na chat, mająca na celu umożliwienie korzystania z niego podczas prz
 
 (function (h, s, m, c) {
     //var PATH = 'http://localhost:81/czatrepajr/'
-    var PATH = 'http://myapp.vb/czatrepajr/'
+    var PATH = 'http://chat.syntax-shell.me/'
         , toLoad = 3
         , loadHandler = function () {
             if (!--toLoad)
