@@ -29,7 +29,10 @@
     margin: 0;
     font-size: 15px;
 }
-
+.min-chat__icon{
+    width: 25px;
+    vertical-align: middle;
+}
 .min-chat__header__switch {
     background-color: #2C3E50;
     position: relative;
