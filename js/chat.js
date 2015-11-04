@@ -8,7 +8,7 @@ function Chat() {
     this.userID = null;
     this.users = new Map();
     this.messages = new Set();
-    this.toggleNamed = ["Wyłącz", "Włącz"];
+    this.toggleNamed = [['↓', 'Wyłącz'], ['↑', 'Włącz']];
     this.stop = JSON.parse(localStorage.getItem("stop"));
     this.lastID = localStorage.getItem('lastID') || 0;
     this.$box = document.querySelector('.min-chat__content');
@@ -80,7 +80,9 @@ Chat.prototype.toggleChat = function () {
 Chat.prototype.checkChat = function () {
     var switchButton = document.getElementById('min-chat-switch');
     var chatContent = document.getElementById('min-chat-content');
-    switchButton.innerHTML = this.toggleNamed[Number(this.stop)];
+    var current = +this.stop;
+    switchButton.innerHTML = this.toggleNamed[current][0];
+    switchButton.title = this.toggleNamed[current][1];
 
     if (this.stop) {
         chatContent.className = "min-chat__content--collapsed";
