@@ -1,8 +1,3 @@
-/*
- author: bartek
- date: 23:49 19-08-2015
- */
-
 function Chat() {
     this.url = 'http://forum.miroslawzelent.pl/chat';
     this.userID = null;
