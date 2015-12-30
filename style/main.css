@@ -29,7 +29,7 @@
     margin: 0;
     font-size: 15px;
 }
-.min-chat__icon{
+.min-chat__header__icon{
     width: 25px;
     vertical-align: middle;
 }
@@ -40,7 +40,7 @@
     color: #eee;
 }
 
-.min-chat__content--collapsed {
+.min-chat__wrapper--collapsed {
     height: 0;
 }
 
