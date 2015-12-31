@@ -30,7 +30,7 @@
   headerSwitch.innerHTML = "↓";
 
   wrapper = document.createElement( "div" );
-  wrapper.id = prefix + "-content";
+  wrapper.id = prefix + "-wrapper";
 
   notifyLeft = document.createElement( "div" );
   notifyLeft.classList.add( prefix + "__notify", prefix + "__notify--left", prefix + "__notify--hidden" );

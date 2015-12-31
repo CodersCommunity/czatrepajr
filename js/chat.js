@@ -259,6 +259,8 @@ Chat.prototype.sendMessage = function (value) {
 Chat.prototype.getMessages = function () {
   this.logger("Czatrepajr::getMessages");
   this.getMessagesRequest();
+
+  setTimeout(this.getMessages.bind(this), this.REQUEST_FREQUENCY);
 };
 
 Chat.prototype.getMessagesRequest = function () {
@@ -281,8 +283,6 @@ Chat.prototype.getMessagesRequest = function () {
     this.logger("Czatrepajr::getMessagesRequest->" + this.lastID);
     this.updateMessages(JSON.parse(response[2]));
     this.updateUsers(JSON.parse(response[3]));
-
-    setTimeout(this.getMessages.bind(this), this.REQUEST_FREQUENCY);
   }.bind(this)).fail(function () {
     console.warn('getMessages fail');
   });
