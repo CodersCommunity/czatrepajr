@@ -4,7 +4,7 @@
   var prefix = "min-chat"
     , section
     , header, headerTitle, headerSpan, headerIcon, headerSwitch
-    , wrapper, notifyLeft, notifyJoin, content, fieldSet, input
+    , wrapper, notifyLeft, notifyJoin, content, info, fieldSet, input
   ;
 
   section = document.createElement( "section" );
@@ -41,6 +41,10 @@
   content = document.createElement( "div" );
   content.classList.add( prefix + "__content" );
 
+  info = document.createElement( "div" );
+  info.classList.add( "min-chat__info" );
+  info.innerHTML = "Zaloguj się, aby dołączyć do chatu.";
+
   fieldSet = document.createElement( "div" );
   fieldSet.classList.add( prefix + "__fieldset" );
 
@@ -54,6 +58,8 @@
   /* WRAPPER ELEMENTS */
 
   fieldSet.appendChild( input );
+
+  content.appendChild( info );
 
   wrapper.appendChild( notifyLeft );
   wrapper.appendChild( notifyJoin );

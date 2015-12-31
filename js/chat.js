@@ -15,6 +15,8 @@ function Chat() {
   this.setupCommands();
   this.systemID = -1;
   this.maxScrolled = true;
+
+  this.REQUEST_FREQUENCY = 4000; // send request every 4 seconds
 }
 
 Chat.prototype.logger = function (name) {
@@ -257,7 +259,6 @@ Chat.prototype.sendMessage = function (value) {
 Chat.prototype.getMessages = function () {
   this.logger("Czatrepajr::getMessages");
   this.getMessagesRequest();
-  setTimeout(this.getMessages.bind(this), 5500);
 };
 
 Chat.prototype.getMessagesRequest = function () {
@@ -271,6 +272,7 @@ Chat.prototype.getMessagesRequest = function () {
     ajax_get_messages: this.lastID
   }).done(function (response) {
     if (response.indexOf("Nie jesteś już zalogowany.") > -1) {
+      document.querySelector('.min-chat__info').classList.add('min-chat__info--shown');
       return;
     }
 
@@ -279,6 +281,8 @@ Chat.prototype.getMessagesRequest = function () {
     this.logger("Czatrepajr::getMessagesRequest->" + this.lastID);
     this.updateMessages(JSON.parse(response[2]));
     this.updateUsers(JSON.parse(response[3]));
+
+    setTimeout(this.getMessages.bind(this), this.REQUEST_FREQUENCY);
   }.bind(this)).fail(function () {
     console.warn('getMessages fail');
   });

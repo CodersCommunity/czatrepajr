@@ -45,6 +45,17 @@
   height: 0;
 }
 
+.min-chat__info {
+  display: none;
+  margin-top: 110px;
+  font-size: 14px;
+  text-align: center;
+}
+
+.min-chat__info--shown {
+  display: block;
+}
+
 .min-chat__content {
   height: 250px;
   padding: 0 10px;
