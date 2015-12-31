@@ -10,6 +10,7 @@
   position: fixed;
   bottom: 5px;
   right: 15px;
+  z-index: 1000; /* .qa-error has z-index: 999 */
 
   box-shadow: 0 0 15px rgba(0, 0, 0, .5);
 }
@@ -29,7 +30,7 @@
   margin: 0;
   font-size: 15px;
 }
-.min-chat__header__icon{
+.min-chat__header__icon {
   width: 25px;
   vertical-align: middle;
 }
