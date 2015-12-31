@@ -36,7 +36,7 @@
   notifyLeft.classList.add( prefix + "__notify", prefix + "__notify--left", prefix + "__notify--hidden" );
 
   notifyJoin = document.createElement("div");
-  notifyJoin.classList.add( prefix + "__notify", prefix + "__notify--left", prefix + "__notify--hidden" );
+  notifyJoin.classList.add( prefix + "__notify", prefix + "__notify--join", prefix + "__notify--hidden" );
 
   content = document.createElement( "div" );
   content.classList.add( prefix + "__content" );
