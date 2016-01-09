@@ -12,8 +12,9 @@
     , FILE = 'repajr.min.js'
     , PATH = HOST + FILE
 
-    , script = document.head.appendChild(document.createElement('script'))
+    , script = document.createElement('script')
   ;
 
   script.src = PATH;
+  document.head.appendChild(script);
 })();
