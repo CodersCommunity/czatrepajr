@@ -1,4 +1,10 @@
-# czatrepajr
+# Czatrepajr
+____
+
+# REPOZYTORIUM NIE BĘDZIE JUŻ WSPIERANE! (Przejście na IRC)
+# _Był to pierwszy projekt na forum który ujrzał światło dzienne._
+
+____
 
 Nakładka na chat, mająca na celu umożliwienie korzystania z niego podczas przebywania w dowolnym miejscu forum.
 
